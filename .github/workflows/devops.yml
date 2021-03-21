@@ -5,7 +5,7 @@ on:
 
 jobs:
 
-  build:
+  devops:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -14,17 +14,9 @@ jobs:
         git_ref_name=$(echo "${{ github.ref }}" | awk -F '/' '{print $NF}')
         docker build . --file Dockerfile --tag tool-man:demo-${git_ref_name}
         docker tag tool-man:demo-${git_ref_name} tool-man:demo
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Deploy SIT Env
+    - name: Deploy SIT ENV
       run: |
         echo 'This is a DEMO for deployment'
-  sit:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
     - name: System Integration Testing
       run: |
         docker run -v output:/workspace/output --rm tool-man:demo -c "robot -d output testcase" || exit 0
