@@ -19,7 +19,7 @@ jobs:
         echo 'This is a DEMO for deployment'
     - name: System Integration Testing
       run: |
-        docker run -v output:/workspace/output --rm tool-man:demo -c "robot -d output testcase" || exit 0
+        docker run -v output:/workspace/output --rm tool-man:demo bash -c "robot -d output testcase" || exit 0
     - name: Return Execution Results to Xray
       run: |
         curl -X POST -H "Content-Type: multipart/form-data" -u ${{ secrets.JIRA_USER }}:${{ secrets.JIRA_PASS }} -F "file=@output/output.xml" "${{ secrets.JIRA_URL }}/rest/raven/1.0/import/execution/robot?projectKey=${{ secrets.JIRA_PROJECT }}&testPlanKey=${{ secrets.JIRA_TESTPLAN }}"
