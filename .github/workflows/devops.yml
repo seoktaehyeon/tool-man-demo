@@ -22,4 +22,5 @@ jobs:
         docker run -v $PWD/output:/workspace/output --rm tool-man:demo bash -c "robot -d output testcase"
     - name: Return Execution Results to Xray
       run: |
-        curl -X POST -H "Content-Type: multipart/form-data" -u ${{ secrets.JIRA_USER }}:${{ secrets.JIRA_PASS }} -F "file=$PWD/@output.xml" "${{ secrets.JIRA_URL }}/rest/raven/1.0/import/execution/robot?projectKey=${{ secrets.JIRA_PROJECT }}&testPlanKey=${{ secrets.JIRA_TESTPLAN }}"
+        cd $PWD/output
+        curl -X POST -H "Content-Type: multipart/form-data" -u ${{ secrets.JIRA_USER }}:${{ secrets.JIRA_PASS }} -F "file=@output.xml" "${{ secrets.JIRA_URL }}/rest/raven/1.0/import/execution/robot?projectKey=${{ secrets.JIRA_PROJECT }}&testPlanKey=${{ secrets.JIRA_TESTPLAN }}"

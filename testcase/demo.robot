@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation       Tool-Man Demo
+Documentation       工具人学堂演示代码
 
 
 *** Variables ***
@@ -7,14 +7,14 @@ Documentation       Tool-Man Demo
 
 *** Test Cases ***
 Login App
-    [Documentation]     Demo - Login App
+    [Documentation]     模拟登录应用
     [Tags]              Demo
-    log    Login succeed
+    log    登录成功
 
 Logout App
-    [Documentation]     Demo - Logout App
+    [Documentation]     模拟登出应用
     [Tags]              Demo
-    log    Logout succeed
+    log    登出成功
 
 
 *** Keywords ***
