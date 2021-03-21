@@ -27,5 +27,5 @@ jobs:
     - name: Return Info to Jira Issue
       run: |
         curl -X POST -H "Content-Type: application/json" -H "Accept: application/json"  -u ${{ secrets.JIRA_USER }}:${{ secrets.JIRA_PASS }} "${{ secrets.JIRA_URL }}/rest/api/2/issue/DEMODEV-15/comment" -d '{
-          "body": "CI Job [${{ GITHUB_WORKFLOW }} # ${{ GITHUB_RUN_NUMBER }}|https://github.com/seoktaehyeon/tool-man-demo/actions] Complete."
+          "body": "CI Job [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER|https://github.com/seoktaehyeon/tool-man-demo/actions] Complete."
         }'
