@@ -26,7 +26,6 @@ jobs:
         curl -X POST -H "Content-Type: multipart/form-data" -u ${{ secrets.JIRA_USER }}:${{ secrets.JIRA_PASS }} -F "file=@output.xml" "${{ secrets.JIRA_URL }}/rest/raven/1.0/import/execution/robot?projectKey=${{ secrets.JIRA_PROJECT }}&testPlanKey=${{ secrets.JIRA_TESTPLAN }}"
     - name: Return Info to Jira Issue
       run: |
-      ISSUE_ID=$(GITHUB_REPOSITORY)
-      curl -X POST -H "Content-Type: application/json" -H "Accept: application/json"  -u ${{ secrets.JIRA_USER }}:${{ secrets.JIRA_PASS }} "${{ secrets.JIRA_URL }}/rest/api/2/issue/${ISSUE_ID}/comment" -d '{
-      "body": "CI Job [${GITHUB_WORKFLOW} # ${GITHUB_RUN_NUMBER}] Complete."
-      }'
+        curl -X POST -H "Content-Type: application/json" -H "Accept: application/json"  -u ${{ secrets.JIRA_USER }}:${{ secrets.JIRA_PASS }} "${{ secrets.JIRA_URL }}/rest/api/2/issue/DEMODEV-15/comment" -d '{
+          "body": "CI Job [${GITHUB_WORKFLOW} # ${GITHUB_RUN_NUMBER}] Complete."
+        }'
