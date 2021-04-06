@@ -38,8 +38,8 @@ pipeline {
       }
     }
     jiraComment {
-      issueKey: 'DEMODEV-15'
-      body: 'Hello',
+      issueKey: 'DEMODEV-15',
+      body: 'Hello'
     }
   }
 }
