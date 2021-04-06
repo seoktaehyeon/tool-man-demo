@@ -37,5 +37,9 @@ pipeline {
         """
       }
     }
+    jiraComment {
+      issueKey: 'DEMODEV-15'
+      body: 'Hello',
+    }
   }
 }
