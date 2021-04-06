@@ -17,8 +17,8 @@ pipeline {
         sleep 2
         echo "Complete to build"
         """
+        jiraComment issueKey: 'DEMODEV-15', body: 'Hello'
       }
-      jiraComment issueKey: 'DEMODEV-15', body: 'Hello'
     }
     stage('Setup Test Env') {
       steps {
