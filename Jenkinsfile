@@ -37,9 +37,6 @@ pipeline {
         """
       }
     }
-    jiraComment {
-      issueKey: 'DEMODEV-15',
-      body: 'Hello'
-    }
+    jiraComment issueKey: 'DEMODEV-15', body: 'Hello'
   }
 }
