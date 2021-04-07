@@ -1,6 +1,7 @@
 #!/bin/bash
-CURL="curl -X POST -H 'Content-Type: application/json' -H 'Accept: application/json'"
+CURL="curl -v -X POST -H 'Content-Type: application/json' -H 'Accept: application/json'"
 JIRA_KEY=$(git log -n 1 | tail -1 | awk '{print $1}')
+echo "${JIRA_KEY}"
 JIRA_URL=${1?}
 JIRA_USER=${2?}
 JIRA_PASS=${3?}
