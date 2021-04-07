@@ -1,7 +1,7 @@
 pipeline {
   agent any
   parameters {
-    password name: 'JIRA_URL'
+    string name: 'JIRA_URL'
   }
   stages {
     stage('Build Image') {
@@ -16,7 +16,8 @@ pipeline {
         always {
           withCredentials(bindings: [usernamePassword(credentialsId: 'jira-jenkins', passwordVariable: 'JIRA_PASS', usernameVariable: 'JIRA_USER')]) {
             sh """
-            bash ./jira_client.sh "$JIRA_URL" "$JIRA_USER" "$JIRA_PASS" "(/) Jenkins 构建流水线 [$JOB_NAME $BUILD_DISPLAY_NAME #1|$BUILD_URL] [{color:#00875a}*成功*{color}] 构建镜像 tool-man:demo-${BRANCH_NAME}"
+            env
+            #bash ./jira_client.sh "$JIRA_URL" "$JIRA_USER" "$JIRA_PASS" "(/) Jenkins 构建流水线 [$JOB_NAME $BUILD_DISPLAY_NAME #1|$JENKINS_URL/blue/organizations/jenkins/$JOB_NAME BUILD_URL] [{color:#00875a}*成功*{color}] 构建镜像 tool-man:demo-${BRANCH_NAME}"
             """
           }
         }
