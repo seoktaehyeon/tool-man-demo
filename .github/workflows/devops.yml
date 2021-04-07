@@ -11,14 +11,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build the Docker image
       run: |
-        JIRA_KEY=$(git log -n 1 | tail -1 | awk '{print $1}')
-        if $(echo ${JIRA_KEY} | awk -F '-' '{print $NF}' | grep -w '^[0-9]*') == 0; then
-          curl -X POST -H "Content-Type: application/json" -H "Accept: application/json"  \
-              -u ${{ secrets.JIRA_USER }}:${{ secrets.JIRA_PASS }} \
-              "${{ secrets.JIRA_URL }}/rest/api/2/issue/$JIRA_KEY/comment" -d "{
-                  \"body\": \"(i) GitHub 构建流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #1|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#4c9aff}*进行中*{color}] 开始构建\"
-              }"
-        fi
+        bash ./jira_client.sh "${{ secrets.JIRA_URL }}" "${{ secrets.JIRA_USER }}" "${{ secrets.JIRA_PASS }}" \
+          "(i) GitHub 构建流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #1|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#4c9aff}*进行中*{color}] 开始构建"
         git_ref_name=$(echo "${{ github.ref }}" | awk -F '/' '{print $NF}')
         docker build . --file Dockerfile --tag tool-man:demo-${git_ref_name}
         docker tag tool-man:demo-${git_ref_name} tool-man:demo
