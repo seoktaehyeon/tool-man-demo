@@ -16,50 +16,23 @@ jobs:
         git_ref_name=$(echo "${{ github.ref }}" | awk -F '/' '{print $NF}')
         docker build . --file Dockerfile --tag tool-man:demo-${git_ref_name}
         docker tag tool-man:demo-${git_ref_name} tool-man:demo
-        if $(echo ${JIRA_KEY} | awk -F '-' '{print $NF}' | grep -w '^[0-9]*') == 0; then
-          curl -X POST -H "Content-Type: application/json" -H "Accept: application/json"  \
-              -u ${{ secrets.JIRA_USER }}:${{ secrets.JIRA_PASS }} \
-              "${{ secrets.JIRA_URL }}/rest/api/2/issue/$JIRA_KEY/comment" -d "{
-                  \"body\": \"(/) GitHub 构建流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #1|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#00875a}*成功*{color}] 构建镜像 tool-man:demo-${git_ref_name}\"
-              }"
-        fi
+        bash ./jira_client.sh "${{ secrets.JIRA_URL }}" "${{ secrets.JIRA_USER }}" "${{ secrets.JIRA_PASS }}" \
+            "(/) GitHub 构建流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #1|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#00875a}*成功*{color}] 构建镜像 tool-man:demo-${git_ref_name}"
     - name: Deploy SIT ENV
       run: |
-        JIRA_KEY=$(git log -n 1 | tail -1 | awk '{print $1}')
-        if $(echo ${JIRA_KEY} | awk -F '-' '{print $NF}' | grep -w '^[0-9]*') == 0; then
-          curl -X POST -H "Content-Type: application/json" -H "Accept: application/json"  \
-              -u ${{ secrets.JIRA_USER }}:${{ secrets.JIRA_PASS }} \
-              "${{ secrets.JIRA_URL }}/rest/api/2/issue/$JIRA_KEY/comment" -d "{
-                  \"body\": \"(i) GitHub 部署流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #2|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#4c9aff}*进行中*{color}] 开始部署\"
-              }"
-        fi
+        bash ./jira_client.sh "${{ secrets.JIRA_URL }}" "${{ secrets.JIRA_USER }}" "${{ secrets.JIRA_PASS }}" \
+            "(i) GitHub 部署流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #2|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#4c9aff}*进行中*{color}] 开始部署"
         echo 'This is a DEMO for deployment'
         sleep 2
-        if $(echo ${JIRA_KEY} | awk -F '-' '{print $NF}' | grep -w '^[0-9]*') == 0; then
-          curl -X POST -H "Content-Type: application/json" -H "Accept: application/json"  \
-              -u ${{ secrets.JIRA_USER }}:${{ secrets.JIRA_PASS }} \
-              "${{ secrets.JIRA_URL }}/rest/api/2/issue/$JIRA_KEY/comment" -d "{
-                  \"body\": \"(/) GitHub 部署流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #2|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#00875a}*成功*{color}] 部署测试环境\"
-              }"
-        fi
+        bash ./jira_client.sh "${{ secrets.JIRA_URL }}" "${{ secrets.JIRA_USER }}" "${{ secrets.JIRA_PASS }}" \
+            "(/) GitHub 部署流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #2|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#00875a}*成功*{color}] 部署测试环境"
     - name: System Integration Testing
       run: |
-        JIRA_KEY=$(git log -n 1 | tail -1 | awk '{print $1}')
-        if $(echo ${JIRA_KEY} | awk -F '-' '{print $NF}' | grep -w '^[0-9]*') == 0; then
-          curl -X POST -H "Content-Type: application/json" -H "Accept: application/json"  \
-              -u ${{ secrets.JIRA_USER }}:${{ secrets.JIRA_PASS }} \
-              "${{ secrets.JIRA_URL }}/rest/api/2/issue/$JIRA_KEY/comment" -d "{
-                  \"body\": \"(i) GitHub 测试流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #3|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#4c9aff}*进行中*{color}] 开始测试\"
-              }"
-        fi
+        bash ./jira_client.sh "${{ secrets.JIRA_URL }}" "${{ secrets.JIRA_USER }}" "${{ secrets.JIRA_PASS }}" \
+            "(i) GitHub 测试流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #3|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#4c9aff}*进行中*{color}] 开始测试"
         docker run -v $PWD/output:/workspace/output --rm tool-man:demo bash -c "robot -d output testcase"
-        if $(echo ${JIRA_KEY} | awk -F '-' '{print $NF}' | grep -w '^[0-9]*') == 0; then
-          curl -X POST -H "Content-Type: application/json" -H "Accept: application/json"  \
-              -u ${{ secrets.JIRA_USER }}:${{ secrets.JIRA_PASS }} \
-              "${{ secrets.JIRA_URL }}/rest/api/2/issue/$JIRA_KEY/comment" -d "{
-                  \"body\": \"(/) GitHub 测试流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #3|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#00875a}*成功*{color}] 完成测试\"
-              }"
-        fi
+        bash ./jira_client.sh "${{ secrets.JIRA_URL }}" "${{ secrets.JIRA_USER }}" "${{ secrets.JIRA_PASS }}" \
+            "(/) GitHub 测试流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #3|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#00875a}*成功*{color}] 完成测试"
     - name: Return Execution Results to Xray
       run: |
         cd $PWD/output

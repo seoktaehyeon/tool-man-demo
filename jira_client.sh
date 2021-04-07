@@ -13,6 +13,6 @@ echo ${JIRA_KEY} | awk -F '-' '{print $NF}' | grep -w '^[0-9]*' || {
 }
 
 echo "Update jira comment for ${JIRA_KEY}"
-curl -sv -H "Content-Type: application/json" -H "Accept: application/json" \
+curl -s -H "Content-Type: application/json" -H "Accept: application/json" \
     -u ${JIRA_USER}:${JIRA_PASS} "${JIRA_URL}/rest/api/2/issue/$JIRA_KEY/comment" \
     -d "{\"body\": \"${JIRA_COMMENT}\"}"
