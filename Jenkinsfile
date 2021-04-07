@@ -1,5 +1,8 @@
 pipeline {
   agent any
+  parameters {
+    string password: 'JIRA_URL'
+  }
   stages {
     stage('Build Image') {
       steps {
@@ -10,8 +13,12 @@ pipeline {
         """
       }
       post {
-        def comment = [ body: "(/) Jenkins 构建流水线 [$JOB_NAME $BUILD_DISPLAY_NAME #1|$BUILD_URL] [{color:#00875a}*成功*{color}] 构建镜像 tool-man:demo-${BRANCH_NAME}" ]
-        jiraAddComment idOrKey: 'DEMODEV-15', input: comment
+        withCredentials(usernamePassword(credentialsId: 'jira-jenkins', usernameVariable: 'JIRA_USER', passwordVariable: 'JIRA_PASS')) {
+          sh """
+          comment="(/) Jenkins 构建流水线 [$JOB_NAME $BUILD_DISPLAY_NAME #1|$BUILD_URL] [{color:#00875a}*成功*{color}] 构建镜像 tool-man:demo-${BRANCH_NAME}"
+          bash jira_client.sh "$JIRA_URL" "$JIRA_USER" "$JIRA_PASS" "$comment"
+          """
+        }
       }
     }
     stage('Setup Test Env') {
