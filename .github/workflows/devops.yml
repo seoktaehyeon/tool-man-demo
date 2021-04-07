@@ -12,27 +12,27 @@ jobs:
     - name: Build the Docker image
       run: |
         bash ./jira_client.sh "${{ secrets.JIRA_URL }}" "${{ secrets.JIRA_USER }}" "${{ secrets.JIRA_PASS }}" \
-          "(i) [{color:#403294}*GitHub*{color}] 构建流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #1|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#4c9aff}*进行中*{color}] 开始构建"
+          "(i) {color:#403294}*GitHub*{color} 构建流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #1|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#4c9aff}*进行中*{color}] 开始构建"
         git_ref_name=$(echo "${{ github.ref }}" | awk -F '/' '{print $NF}')
         docker build . --file Dockerfile --tag tool-man:demo-${git_ref_name}
         docker tag tool-man:demo-${git_ref_name} tool-man:demo
         bash ./jira_client.sh "${{ secrets.JIRA_URL }}" "${{ secrets.JIRA_USER }}" "${{ secrets.JIRA_PASS }}" \
-            "(/) [{color:#403294}*GitHub*{color}] 构建流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #1|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#00875a}*成功*{color}] 构建镜像 tool-man:demo-${git_ref_name}"
+            "(/) {color:#403294}*GitHub*{color} 构建流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #1|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#00875a}*成功*{color}] 构建镜像 tool-man:demo-${git_ref_name}"
     - name: Deploy SIT ENV
       run: |
         bash ./jira_client.sh "${{ secrets.JIRA_URL }}" "${{ secrets.JIRA_USER }}" "${{ secrets.JIRA_PASS }}" \
-            "(i) [{color:#403294}*GitHub*{color}] 部署流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #2|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#4c9aff}*进行中*{color}] 开始部署"
+            "(i) {color:#403294}*GitHub*{color} 部署流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #2|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#4c9aff}*进行中*{color}] 开始部署"
         echo 'This is a DEMO for deployment'
         sleep 2
         bash ./jira_client.sh "${{ secrets.JIRA_URL }}" "${{ secrets.JIRA_USER }}" "${{ secrets.JIRA_PASS }}" \
-            "(/) [{color:#403294}*GitHub*{color}] 部署流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #2|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#00875a}*成功*{color}] 部署测试环境"
+            "(/) {color:#403294}*GitHub*{color} 部署流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #2|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#00875a}*成功*{color}] 部署测试环境"
     - name: System Integration Testing
       run: |
         bash ./jira_client.sh "${{ secrets.JIRA_URL }}" "${{ secrets.JIRA_USER }}" "${{ secrets.JIRA_PASS }}" \
-            "(i) [{color:#403294}*GitHub*{color}] 测试流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #3|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#4c9aff}*进行中*{color}] 开始测试"
+            "(i) {color:#403294}*GitHub*{color} 测试流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #3|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#4c9aff}*进行中*{color}] 开始测试"
         docker run -v $PWD/output:/workspace/output --rm tool-man:demo bash -c "robot -d output testcase"
         bash ./jira_client.sh "${{ secrets.JIRA_URL }}" "${{ secrets.JIRA_USER }}" "${{ secrets.JIRA_PASS }}" \
-            "(/) [{color:#403294}*GitHub*{color}] 测试流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #3|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#00875a}*成功*{color}] 完成测试"
+            "(/) [{color:#403294}*GitHub*{color} 测试流水线 [$GITHUB_WORKFLOW # $GITHUB_RUN_NUMBER #3|$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID] [{color:#00875a}*成功*{color}] 完成测试"
     - name: Return Execution Results to Xray
       run: |
         cd $PWD/output
