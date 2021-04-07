@@ -1,14 +1,5 @@
 pipeline {
   agent any
-//   environment {
-//     INT_REPO='gitlab.jing-yi.com.cn'
-//     INT_HARBOR='harbor.jing-yi.com.cn'
-//   }
-//   parameters {
-//     string name: 'GIT_PROJECT', trim: true
-//     string name: 'GIT_BRANCH', trim: true, defaultValue: 'master'
-//     string name: 'MY_CRED', trim: true, defaultValue: 'gitlab-devops'
-//   }
   stages {
     stage('Build Image') {
       steps {
@@ -17,7 +8,10 @@ pipeline {
         sleep 2
         echo "Complete to build"
         """
-        jiraComment issueKey: 'DEMODEV-15', body: 'Hello'
+      }
+      post {
+        def comment = [ body: "(/) Jenkins 构建流水线 [$JOB_NAME $BUILD_DISPLAY_NAME #1|$BUILD_URL] [{color:#00875a}*成功*{color}] 构建镜像 tool-man:demo-${BRANCH_NAME}" ]
+        jiraAddComment idOrKey: 'DEMODEV-15', input: comment
       }
     }
     stage('Setup Test Env') {
