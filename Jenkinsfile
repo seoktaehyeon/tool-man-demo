@@ -16,8 +16,7 @@ pipeline {
         always {
           withCredentials(bindings: [usernamePassword(credentialsId: 'jira-jenkins', passwordVariable: 'JIRA_PASS', usernameVariable: 'JIRA_USER')]) {
             sh """
-            BLUE_URL=$(echo $BUILD_URL | sed 's#job#blue/organizations/jenkins#' | sed 's#job#detail#')
-            #bash ./jira_client.sh "$JIRA_URL" "$JIRA_USER" "$JIRA_PASS" "(/) Jenkins 构建流水线 [$JOB_NAME $BUILD_DISPLAY_NAME #$STAGE_NAME |$BLUE_URL] [{color:#00875a}*成功*{color}] 构建镜像 tool-man:demo-${BRANCH_NAME}"
+            #bash ./jira_client.sh "$JIRA_URL" "$JIRA_USER" "$JIRA_PASS" "(/) Jenkins 构建流水线 [$JOB_NAME $BUILD_DISPLAY_NAME #$STAGE_NAME |$BUILD_URL] [{color:#00875a}*成功*{color}] 构建镜像 tool-man:demo-${BRANCH_NAME}"
             """
           }
         }
