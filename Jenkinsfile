@@ -1,7 +1,7 @@
 pipeline {
   agent any
   parameters {
-    string password: 'JIRA_URL'
+    password name: 'JIRA_URL'
   }
   stages {
     stage('Build Image') {
